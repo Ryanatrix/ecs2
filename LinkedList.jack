@@ -27,29 +27,29 @@ class LinkedList {
     }
 
 
-   method void moverAlien(int alienSpeed){
-    var Node currentNode, NodeChangeDirection;  
-    var Alien currentAlien;
-    var Alien AlienChangeDirection;
+    method void moverAlien(){
+        var Node currentNode,NodeChangeDirection;  
+        var Alien currentAlien;
+        var Alien AlienChangeDirection;
 
-    let currentNode = head;
-    while (~(currentNode = null)){
-        let currentAlien = currentNode.getAlien();
-        if ((currentAlien.getX() > 450) | (currentAlien.getX() < 15)){
-            let NodeChangeDirection = head;
-            while (~(NodeChangeDirection = null)){
-                let AlienChangeDirection = NodeChangeDirection.getAlien();
-                do AlienChangeDirection.changeDirection();
-                do AlienChangeDirection.movement(alienSpeed); // Pass speed here
-                let NodeChangeDirection = NodeChangeDirection.getNext();
+    
+        let currentNode = head;
+        while(~(currentNode = null)){
+            let currentAlien = currentNode.getAlien();
+            if((currentAlien.getX() > 450) | (currentAlien.getX() < 15)){
+                let NodeChangeDirection = head;
+                while (~(NodeChangeDirection = null)){
+                    let AlienChangeDirection = NodeChangeDirection.getAlien();
+                    do AlienChangeDirection.changeDirection();
+                    do AlienChangeDirection.movement();
+                    let NodeChangeDirection = NodeChangeDirection.getNext();
+                }   
             }
+            do currentAlien.movement();
+            let currentNode = currentNode.getNext();
         }
-        do currentAlien.movement(alienSpeed); // Pass speed here
-        let currentNode = currentNode.getNext();
+        return;
     }
-    return;
-}
-
     
 
     method void removeSpecificAlien(int n) {
