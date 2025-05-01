@@ -3,7 +3,6 @@ class Alien{
     field int alienIndex;
     field int direction; 
     field Shoot alienShoots;
-    field int speed;
 
     constructor Alien new(int posX, int posY,int index){
         let x = posX;
@@ -23,7 +22,6 @@ class Alien{
     
     method void draw() {
 	    var int memAddress;
-	    
 	    let memAddress = 16384 + (y*32) + (x/16);
 	    if((memAddress > 16383) & (memAddress < 24576)){
             do Memory.poke(memAddress, 1536);
@@ -218,12 +216,6 @@ class Alien{
     /*This is a method where we increse 
     or decrease the posicion of the aliens
     and then draw the alien in the new position*/
-
-    method void setSpeed(int s){
-        let speed = s;
-        return;
-    }
-
     method void movement(){
         do erase();
         if (direction = 1 ){
@@ -234,6 +226,7 @@ class Alien{
         do draw();
         return;
     }
+
     /*In this method we create
     the bullet that will 
     later be shot*/
@@ -247,4 +240,3 @@ class Alien{
     }
 
 }
-
