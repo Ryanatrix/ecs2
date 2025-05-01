@@ -1,0 +1,80 @@
+class Nave {
+    field int x, y; 
+    field int size; 
+    field int ancho; 
+    field Shoot shoot;
+
+
+
+    constructor Nave new(){
+        let x = 230;
+        let y = 230;
+        let size = 10;
+        let ancho = 40;
+        do draw();
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    } 
+
+    method int getX(){
+        return x;
+    }
+
+
+    method int getY(){
+        return y;
+    }
+
+    method void draw(){
+        do erase();
+        do Screen.setColor(1);
+        do Screen.drawRectangle(x + 20, y-10 ,x+30,y-5);
+        do Screen.drawRectangle(x + 5,y-5,x + 45, y);
+        do Screen.drawRectangle(x, y, x + size + ancho, y + size);
+        return;
+    }
+
+    method void erase(){ 
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x + 20, y-10 ,x+30,y-5);
+        do Screen.drawRectangle(x + 5,y-5,x + 45, y);
+        do Screen.drawRectangle(x, y, x + size + ancho, y + size);
+        return;
+    }
+
+
+    method void movement(int dir){
+        if ((dir = 132) & ((x + size) < 460)){
+            do Screen.setColor(false);
+            do erase();
+            let x = x + 3;
+            do Screen.setColor(true);
+            do draw();
+        }if ((dir = 130) & (x > 20)){
+            do Screen.setColor(false);
+            do erase();
+            let x = x - 3;
+            do Screen.setColor(true);
+            do draw();
+        }
+        return;
+    }
+
+    /*In this method we create
+    the bullet that will 
+    later be shot*/
+    method void createShoot() {
+		var int posicion_x;
+		let posicion_x = (size + ancho)/2;
+        let shoot = Shoot.new(x + posicion_x, y - 15);
+        return;
+    }
+
+    method Shoot getShoot() {
+        return shoot;
+    }
+}

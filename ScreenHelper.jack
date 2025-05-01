@@ -1,0 +1,39 @@
+class ScreenHelper {
+
+    function ScreenHelper new() {
+        var ScreenHelper instance;
+        let instance = Memory.alloc(1);
+        return instance;
+    }
+
+    method void setBackgroundBlack() {
+        var int i;
+        let i = 0;
+        while (i < 8192) {
+            do Memory.poke(16384 + i, -1);
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method void setTextColorWhite() {
+        do Screen.setColor(true);
+        return;
+    }
+
+    method void setTextColorBlack() {
+        do Screen.setColor(false);
+        return;
+    }
+
+    method void setDefaultColors() {
+        do setBackgroundBlack();
+        do setTextColorWhite();
+        return;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+}
