@@ -1,88 +1,88 @@
-class JuegoNave {
+class JuegoNave{
     field Nave player;
     field int totalAliens;
-    field int playerShootsFlag;
-    field int alienShootsFlag;
-    field int pointsPlayer;
+    field int playerShootsFlag;  //a flag that tells us if there is a player's bullet on the screen at this time 
+    field int alienShootsFlag;  //a flag that tells us if there is a aliens's bullet on the screen at this time 
+    field int pointsPlayer; // how many aliens player has killed
     field int livesPlayer;
     field LinkedList aliens;
     field Alien devuelta;
-    field Shoot alienShoots;
+    field Shoot alienShoots; 
     field int width_ship_x, height_ship_y;
-    field int level; // New field for the level
-    field int alienSpeed; // New field for the alien speed
 
-    constructor JuegoNave new() {
+    constructor JuegoNave new(){
         let player = Nave.new();
         let totalAliens = 25;
         let playerShootsFlag = 0;
-        let alienShootsFlag = 0;
+        let alienShootsFlag = 0; 
         let pointsPlayer = -1;
         let livesPlayer = 11;
         let width_ship_x = 50;
         let height_ship_y = 10;
-        let level = 1;  // Initial level
-        let alienSpeed = 5; // Initial alien speed
         do generateAliens();
         return this;
     }
-
-    method void generateAliens() {
+    
+    method void generateAliens(){
         var int x, y, i;
-        let x = 100;
-        let y = 20;
+        let x = 100;    // x-pos of the first alien
+        let y = 20;     // y-pos of the first alien
         let i = 0;
         let aliens = LinkedList.new();
-        while (i < totalAliens) {
-            do aliens.add(Alien.new(x, y, i));
+        while(i < totalAliens){
+            do aliens.add(Alien.new(x, y,i));
             let x = x + 57;
             let i = i + 1;
-            if (i = 5) {
+            if (i = 5){
                 let y = y + 25;
                 let x = 100;
             }
-            if (i = 10) {
+            if (i = 10){
                 let y = y + 25;
                 let x = 100;
             }
-            if (i = 15) {
+            if(i = 15){
                 let y = y + 25;
                 let x = 100;
             }
-            if (i = 20) {
+            if(i = 20){
                 let y = y + 25;
                 let x = 100;
             }
         }
+    
         return;
     }
-
+   
     method void dispose() {
         do player.dispose();
         do Memory.deAlloc(this);
         return;
     }
 
-    method void shootPathPlayer(Shoot shoot) {
-        if (shoot.getY() < 11) {
+
+    method void shootPathPlayer (Shoot shoot){
+        if (shoot.getY() < 11){
             let playerShootsFlag = 0;
-            do shoot.dispose();
+			do shoot.dispose();
         }
         return;
-    }
 
-    method void shootPathAlien(Shoot shoot) {
-        if (shoot.getY() > 240) {
-            if (totalAliens > 2) {
+	}
+
+    method void shootPathAlien (Shoot shoot){
+        if (shoot.getY() > 240){
+            if (totalAliens > 2){
                 let devuelta = aliens.getNextAlien(devuelta);
             }
             let alienShootsFlag = 0;
-            do shoot.dispose();
+			do shoot.dispose();
         }
-        return;
+		return;
     }
 
-    method void playerWin() {
+
+    method void playerWin(){
         do Screen.clearScreen();
         do Output.moveCursor(0, 20);
         do Output.printString(" -- You win --");
@@ -94,7 +94,7 @@ class JuegoNave {
         return;
     }
 
-    method void playerLoose() {
+    method void playerLoose(){
         do Screen.clearScreen();
         do Output.moveCursor(0, 20);
         do Output.printString(" -- You were Invaded... --");
@@ -106,185 +106,172 @@ class JuegoNave {
         return;
     }
 
-    method void printPoints() {
+    method void printPoints(){
         let pointsPlayer = pointsPlayer + 1;
-        do Output.moveCursor(0, 0);
+        do Output.moveCursor(0,0);
         do Output.printString("Points: ");
         do Output.printInt(pointsPlayer);
         return;
     }
 
-    method void printLives() {
+    method void printLives(){
         let livesPlayer = livesPlayer - 1;
-        if (livesPlayer = 10) {
-            do Output.moveCursor(0, 50);
-        } else {
-            do Output.moveCursor(0, 51);
+        if (livesPlayer = 10){
+           do Output.moveCursor(0,50); 
+        }else{
+            do Output.moveCursor(0,51);
         }
         do Output.printString("Lives Left: ");
-        do Output.printInt(livesPlayer);
+		do Output.printInt(livesPlayer);
         return;
     }
 
-    method void printLevel() {
-        do Output.moveCursor(0, 40);
-        do Output.printString("Level: ");
-        do Output.printInt(level);
-        return;
-    }
 
-    method int naveCollision(Shoot shoot) {
+    method int naveCollision(Shoot shoot){ // ver si la bala colisionó con la nave comparando su posición
+
         var int nave_x;
         var int nave_y;
-        var int shoot_x;
+		var int shoot_x;
         var int shoot_y;
-        var int shoot_size;
-        var int nave_size;
+		var int shoot_size;
+		var int nave_size;
 
-        let nave_x = player.getX();
-        let nave_y = player.getY();
-        let shoot_x = shoot.getX();
-        let shoot_y = shoot.getY();
-        let shoot_size = 4;
+		let nave_x = player.getX();
+		let nave_y = player.getY();
+		let shoot_x = shoot.getX();
+		let shoot_y = shoot.getY();
+		let shoot_size = 4;
 
-        if (alienShootsFlag = 1) {
-            if (((shoot_x > nave_x) & (shoot_y > nave_y) & (shoot_x < (nave_x + width_ship_x)) & (shoot_y < (nave_y + height_ship_y))) |
-                (((shoot_x + shoot_size) > nave_x) & (shoot_y > nave_y) & ((shoot_x + shoot_size) < (nave_x + width_ship_x)) & (shoot_y < (nave_y + height_ship_y))) |
-                ((shoot_x > nave_x) & ((shoot_y + shoot_size) > nave_y) & (shoot_x < (nave_x + width_ship_x)) & ((shoot_y + shoot_size) < (nave_y + height_ship_y))) |
-                (((shoot_x + shoot_size) > nave_x) & ((shoot_y + shoot_size) > nave_y) & ((shoot_x + shoot_size) < (nave_x + width_ship_x)) & ((shoot_y + shoot_size) < (nave_y + height_ship_y)))) {
+        if (alienShootsFlag = 1){
+            if ( ((shoot_x > nave_x) & (shoot_y > nave_y) & (shoot_x < (nave_x+ width_ship_x)) & (shoot_y < (nave_y+height_ship_y)))				|
+            (((shoot_x+shoot_size) > nave_x) & (shoot_y > nave_y) & ((shoot_x+shoot_size) < (nave_x + width_ship_x)) & (shoot_y < (nave_y+height_ship_y))) 	|
+            ((shoot_x > nave_x) & ((shoot_y+shoot_size) > nave_y) & (shoot_x < (nave_x+width_ship_x)) & ((shoot_y+shoot_size) < (nave_y+height_ship_y)))		|
+            (((shoot_x+shoot_size) > nave_x) & ((shoot_y+shoot_size) > nave_y) & ((shoot_x+shoot_size) < (nave_x+width_ship_x)) & ((shoot_y+shoot_size) < (nave_y+height_ship_y))) )  {
 
-                do shoot.dispose();
-                do player.draw();
-                let alienShootsFlag = 0;
+            do shoot.dispose();
+            do player.draw();
+            let alienShootsFlag = 0;
 
-                do printLives();
+            do printLives();
             }
+            
         }
         return 0;
+
     }
+
+
 
     method void run() {
         var char tecla;
         var boolean exit;
-        var Shoot playerShoots;
-
+        var Shoot playerShoots; 
+           
         let exit = false;
-        let devuelta = aliens.firstAlien();
+        let devuelta = aliens.firstAlien(); 
 
         do printPoints();
         do printLives();
-        do printLevel();
 
-        while (~exit) {
+        while (~exit){
             while (tecla = 0) {
-                if (playerShootsFlag = 1) {
+                if (playerShootsFlag = 1){
                     let playerShoots = player.getShoot();
-                    do playerShoots.shoot(1);
+                    do playerShoots.shoot(1); //1 is for player 2 is for aliens 
                     do shootPathPlayer(playerShoots);
-                    if (aliens.shootColisionAlien(playerShoots)) {
+                    if (aliens.shootColisionAlien(playerShoots)){
                         let totalAliens = totalAliens - 1;
                         let playerShootsFlag = 0;
                         do printPoints();
                     }
                 }
-                if (totalAliens = 0) {
-                    let level = level + 1;
-                    let totalAliens = 25;
-                    let alienSpeed = alienSpeed - 1;
-                    if (alienSpeed < 1) {
-                        let alienSpeed = 1;
-                    }
-                    do generateAliens();
-                    do printLevel();
+                if(totalAliens = 0){
+                    do playerWin();
+                    do Sys.wait(200);
+                    return;
                 }
-                if (alienShootsFlag = 0) {
-                    if (totalAliens > 0) {
+                if (alienShootsFlag = 0){
+                    if (totalAliens > 0){
                         do devuelta.createShoot();
                         let alienShootsFlag = 1;
                     }
                 }
 
-                if (alienShootsFlag = 1) {
+                if (alienShootsFlag = 1 ){
                     let alienShoots = devuelta.getShoot();
-                    do alienShoots.shoot(2);
+                    do alienShoots.shoot(2); //1 is for player 2 is for aliens 
                     do shootPathAlien(alienShoots);
                     do naveCollision(alienShoots);
-                }
-
-                if (livesPlayer = 0) {
+                }    
+                if (livesPlayer = 0){
                     do playerLoose();
                     do Sys.wait(200);
                     return;
-                }
+                }          
                 let tecla = Keyboard.keyPressed();
-                do aliens.moverAlien(alienSpeed);
+                do aliens.moverAlien(); 
             }
-
-            if (livesPlayer = 0) {
+            
+            if (livesPlayer = 0){
                 do playerLoose();
                 do Sys.wait(200);
                 return;
+            }     
+            if (tecla = 81) { 
+                let exit = true; //Q  QUIT
             }
-
-            if (tecla = 81) {
-                let exit = true;
-            }
-
-            if (livesPlayer = 0) {
-                do playerLoose();
-                let exit = true;
-            }
-
-            if ((playerShootsFlag = 0) & (tecla = 32)) {
+            
+            if (livesPlayer = 0){
+                    do playerLoose();
+                    let exit = true;
+            }         
+            
+            if ((playerShootsFlag = 0) & (tecla = 32) ){ 
                 do player.createShoot();
                 let playerShootsFlag = 1;
             }
+           
 
-            while (~(tecla = 0)) {
+            while (~(tecla = 0)) {  
                 let tecla = Keyboard.keyPressed();
-                do aliens.moverAlien(alienSpeed);
-                do player.movement(tecla);
-                if (playerShootsFlag = 1) {
+                do aliens.moverAlien(); 
+                do player.movement(tecla); 
+                if (playerShootsFlag = 1){
                     let playerShoots = player.getShoot();
-                    do playerShoots.shoot(1);
+                    do playerShoots.shoot(1); //1 is for player 2 is for aliens 
                     do shootPathPlayer(playerShoots);
-                    if (aliens.shootColisionAlien(playerShoots)) {
+                    if (aliens.shootColisionAlien(playerShoots)){
                         let totalAliens = totalAliens - 1;
                         let playerShootsFlag = 0;
-                        do printPoints();
+                        do printPoints(); 
                     }
                 }
-                if (totalAliens = 0) {
-                    let level = level + 1;
-                    let totalAliens = 25;
-                    let alienSpeed = alienSpeed - 1;
-                    if (alienSpeed < 1) {
-                        let alienSpeed = 1;
-                    }
-                    do generateAliens();
-                    do printLevel();
+                if(totalAliens = 0){
+                    do playerWin();
+                    do Sys.wait(200);
+                    return;
                 }
-                if (alienShootsFlag = 0) {
-                    if (totalAliens > 0) {
+                if (alienShootsFlag = 0){
+                    if (totalAliens > 0){
                         do devuelta.createShoot();
                         let alienShootsFlag = 1;
                     }
                 }
 
-                if (alienShootsFlag = 1) {
+                if (alienShootsFlag = 1 ){
                     let alienShoots = devuelta.getShoot();
-                    do alienShoots.shoot(2);
+                    do alienShoots.shoot(2); //1 is for player 2 is for aliens 
                     do shootPathAlien(alienShoots);
                     do naveCollision(alienShoots);
                 }
 
-                if (livesPlayer = 0) {
+                if (livesPlayer = 0){
                     do playerLoose();
                     do Sys.wait(200);
                     return;
-                }
+                }  
             }
-
+            
         }
         return;
     }
